@@ -1,8 +1,5 @@
 function getRandomElement(nodeList) {
-    // Convert NodeList to an array
     var array = Array.from(nodeList);
-
-    // Return a random element
     return array[Math.floor(Math.random() * array.length)];
 }
 

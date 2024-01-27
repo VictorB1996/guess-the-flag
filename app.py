@@ -47,7 +47,6 @@ def index():
         else:
             session["current_guesses"] += 1
 
-    # Add the selected country to the session
     session["selected_country"] = user_selected_country
 
     return render_template(
@@ -58,7 +57,7 @@ def index():
         countries=session["countries"],
         correct_guess=bool(user_selected_country),
         current_guesses=session["current_guesses"],
-        selected_country=user_selected_country,  # Pass the selected country to the template
+        selected_country=user_selected_country,
     )
 
 
