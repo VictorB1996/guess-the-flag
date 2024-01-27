@@ -21,9 +21,11 @@ def move_images():
     if "images" not in os.listdir(static_dir):
         shutil.move(images_dir, static_dir)
 
+
 @app.route("/static/<path:filename>")
 def static_files(filename):
     return app.send_static_file(filename)
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -61,5 +63,5 @@ def index():
 
 
 if __name__ == "__main__":
-    move_images()  
+    move_images()
     app.run(debug=True)
