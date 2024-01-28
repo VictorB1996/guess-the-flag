@@ -1,45 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guess the Flag</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
-        .flag-container {
-          max-width: 600px; 
-          margin: 0 auto; 
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          grid-template-rows: repeat(2, 1fr);
-          gap: 1px; 
+        body {
+            background-color: rgba(66, 59, 59, 0.929);
         }
-    
+
+        .flag-container {
+            max-width: 400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 1px;
+        }
+
         .flag-part {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     </style>
     <script src="{{ url_for('static', filename='script/change_image.js') }}"></script>
 </head>
+
 <body>
     <h1>{{country}}</h1>
     <div class="flag-container">
         {% for part in parts %}
-            {% set image_path = url_for('static', filename = '/background/part_background.png') %}
-            <img class = "flag-part sub_image_{{loop.index}}" src = "{{ image_path }}">
+        {% set image_path = url_for('static', filename = '/background/part_background.png') %}
+        <img class="flag-part sub_image_{{loop.index}}" src="{{ image_path }}">
         {% endfor %}
     </div>
 
-    <select id="country-dropdown" name="selected-country" onchange="updateImageSource('{{country}}')">
-        <option value="" selected disabled>Select a country</option>
-        {% for country in countries %}
-            <option value="{{ country }}">{{ country }}</option>
-        {% endfor %}
-    </select> 
-    
-    {% if selected_country %}
-        <p>You selected {{ selected_country }}</p>
-    {% endif %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <label for="country-dropdown">Select a country</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="country-dropdown"><i class="fas fa-globe"></i></label>
+                    </div>
+                    <select class="custom-select" id="country-dropdown" name="selected-country"
+                        onchange="updateImageSource('{{country}}')">
+                        <option value="" selected disabled>Select a country</option>
+                        {% for country in countries %}
+                        <option value="{{ country }}">{{ country }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table id="user-guesses" class="table table-dark" style="display: none; width: 50%; height: 50%; margin: auto;">
+        <tbody>
+        </tbody>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
+
 </html>

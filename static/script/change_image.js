@@ -20,10 +20,51 @@ function updateImageSource(country) {
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "/", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
     xhr.send("selected-country=" + selectedCountry);
-    // xhr.onload = function () {
-    //     if (xhr.status === 200) {
-    //     }
-    // };
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var response = JSON.parse(xhr.responseText);
+            handleUserGuess(
+                response.user_selected_country,
+                response.distance,
+                response.direction_png_src
+            )
+        }
+    };
 }
+
+function handleUserGuess(pickedCountry, distance, directionPictureSrc) {
+    // Enable the table
+    var table = document.getElementById("user-guesses");
+    table.style.display = "table";
+
+    table = table.getElementsByTagName('tbody')[0];
+    var newRow = table.insertRow(table.rows.length);
+
+    var cell1 = newRow.insertCell(0);
+    var cell2 = newRow.insertCell(1);
+
+    cell1.innerHTML = pickedCountry;
+    cell2.innerHTML = distance;
+
+    cell1.style.textAlign = "center";
+    cell1.style.verticalAlign = "middle";
+
+    cell2.style.textAlign = "center";
+    cell2.style.verticalAlign = "middle";
+
+    var cell3 = newRow.insertCell(2);
+    var directionImage = document.createElement("img");
+    directionImage.src = directionPictureSrc;
+    directionImage.style.width = "50px";
+    directionImage.style.height = "auto";
+    cell3.appendChild(directionImage);
+    cell3.style.textAlign = "center";
+    cell3.style.verticalAlign = "middle";
+}
+
+
+
 

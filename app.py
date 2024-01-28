@@ -2,8 +2,14 @@ import os
 import shutil
 
 from utils.images import get_random_image
+from utils.directions import (
+    get_coordinates,
+    calculate_direction,
+    calculate_distance,
+    get_direction_png,
+)
 
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, jsonify
 
 app = Flask(__name__)
 app.secret_key = "test"
@@ -11,8 +17,7 @@ app.secret_key = "test"
 base_path = os.path.abspath(os.path.dirname(__file__))
 images_dir = os.path.join(base_path, "static", "images")
 
-allowed_guesses = 6
-current_guesses = 0
+user_picked_countries = []
 
 
 def move_images():
@@ -29,25 +34,56 @@ def static_files(filename):
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    global current_guesses
+    if request.method == "GET":
+        allowed_guesses = 6
+        current_guesses = 0
 
-    if "country" not in session:
-        session["country"], session["flag"], session["parts"] = get_random_image(
-            images_dir
+        country, flag, parts = get_random_image(images_dir)
+        session["country"], session["flag"], session["parts"] = country, flag, parts
+        session["allowed_guesses"] = allowed_guesses
+        session["current_guesses"] = current_guesses
+
+        country_latitiude, country_longitude = get_coordinates(country)
+        session.update(
+            {
+                "country_latitiude": country_latitiude,
+                "country_longitude": country_longitude,
+            }
         )
-        session["countries"] = os.listdir(images_dir)
-        session["current_guesses"] = 0
 
-    user_selected_country = None
-
-    if request.method == "POST":
+    else:
         user_selected_country = request.form.get("selected-country")
-        if user_selected_country == session["country"]:
-            print("You guessed right!")
-        else:
-            session["current_guesses"] += 1
+        user_selected_country_latitude, user_selected_country_longitude = (
+            get_coordinates(user_selected_country)
+        )
 
-    session["selected_country"] = user_selected_country
+        distance = calculate_distance(
+            (session.get("country_latitiude"), session.get("country_longitude")),
+            (user_selected_country_latitude, user_selected_country_longitude),
+        )
+
+        distance = "{:,}".format(int(distance))
+        distance = str(distance) + " Km"
+
+        direction = calculate_direction(
+            user_selected_country_latitude,
+            user_selected_country_longitude,
+            session.get("country_latitiude"),
+            session.get("country_longitude")
+        )
+
+        direction_png_src = get_direction_png(direction)
+
+        return jsonify(
+            {
+                "user_selected_country": user_selected_country,
+                "distance": distance,
+                "direction_png_src": direction_png_src
+            }
+        )
+
+    # Reset session when the game ends
+    # (user either guesses the flag or runs out of choices)
 
     return render_template(
         "index.html",
@@ -55,9 +91,7 @@ def index():
         flag=session["flag"][0],
         parts=session["parts"],
         countries=session["countries"],
-        correct_guess=bool(user_selected_country),
-        current_guesses=session["current_guesses"],
-        selected_country=user_selected_country,
+        user_picked_countries=user_picked_countries,
     )
 
 

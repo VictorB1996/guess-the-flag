@@ -7,3 +7,4 @@ __pycache__
 *.ipynb
 /images
 /static/images
+/static/directions
