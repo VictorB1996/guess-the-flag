@@ -3,7 +3,7 @@ function getRandomElement(nodeList) {
     return array[Math.floor(Math.random() * array.length)];
 }
 
-function updateImageSource(country) {
+function updateImageSource(country, difficulty) {
     var dropdown = document.getElementById("country-dropdown");
     var selectedCountry = dropdown.value;
 
@@ -11,7 +11,7 @@ function updateImageSource(country) {
 
     random_flag_part = getRandomElement(flag_part_imgs);
     classes = Array.from(random_flag_part.classList);
-    image_path = 'static/images/' + country + '/' + classes[1] + ".png";
+    image_path = 'static/images/' + country + "/" + difficulty + "/" + classes[1] + ".png";
     random_flag_part.src = image_path;
     random_flag_part.classList.remove(classes[1]);
 

@@ -15,8 +15,8 @@
             max-width: 400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(2, 1fr);
+            grid-template-columns: repeat({{difficulty_columns}}, 1fr);
+            grid-template-rows: repeat({{difficulty_rows}}, 1fr);
             gap: 1px;
         }
 
@@ -47,7 +47,7 @@
                         <label class="input-group-text" for="country-dropdown"><i class="fas fa-globe"></i></label>
                     </div>
                     <select class="custom-select" id="country-dropdown" name="selected-country"
-                        onchange="updateImageSource('{{country}}')">
+                        onchange="updateImageSource('{{country}}', '{{difficulty}}')">
                         <option value="" selected disabled>Select a country</option>
                         {% for country in countries %}
                         <option value="{{ country }}">{{ country }}</option>
