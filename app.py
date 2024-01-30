@@ -1,7 +1,7 @@
 import os
 import shutil
 
-from utils.images import get_random_image, get_difficulty_width_height
+from utils.images import get_random_image, get_difficulty_width_height, resize_image, get_image_size
 from utils.directions import (
     get_coordinates,
     calculate_direction,
@@ -42,7 +42,8 @@ def index():
             difficulty = "medium"
 
         width, height = get_difficulty_width_height(difficulty)
-
+        
+    
         allowed_guesses = 6
         current_guesses = 0
 
@@ -60,6 +61,11 @@ def index():
                 "country_longitude": country_longitude,
             }
         )
+
+        # Resize background image as per flag parts
+        background_picture_path = os.path.join(images_dir, "..", "background", "part_background.png")
+        background_new_width, background_new_height = get_image_size(os.path.join(images_dir, country, difficulty, "sub_image_1.png"))
+        resize_image(background_new_width, background_new_height, background_picture_path)
 
     else:
         user_selected_country = request.form.get("selected-country")

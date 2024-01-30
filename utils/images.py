@@ -31,6 +31,16 @@ def save_sub_images(sub_images, output_folder):
     for i, sub_image in enumerate(sub_images):
         sub_image.save("{}/sub_image_{}.png".format(output_folder, i + 1))
 
+def resize_image(new_width, new_height, path_to_image):
+    image = Image.open(path_to_image)
+    image = image.resize((new_width, new_height))
+    image.save(path_to_image)
+    return path_to_image
+
+def get_image_size(image_path):
+    image = Image.open(image_path)
+    return image.size
+
 
 def get_random_image(images_dir, difficulty):
     images_folder = os.listdir(images_dir)

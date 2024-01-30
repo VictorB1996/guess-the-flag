@@ -15,7 +15,7 @@
             max-width: 400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat({{difficulty_columns}}, 1fr);
+            grid-template-columns: repeat({{difficulty_columns}}, 2fr);
             grid-template-rows: repeat({{difficulty_rows}}, 1fr);
             gap: 1px;
         }
@@ -33,8 +33,8 @@
     <h1>{{country}}</h1>
     <div class="flag-container">
         {% for part in parts %}
-        {% set image_path = url_for('static', filename = '/background/part_background.png') %}
-        <img class="flag-part sub_image_{{loop.index}}" src="{{ image_path }}">
+            {% set image_path = url_for('static', filename = '/background/part_background.png') %}
+            <img class="flag-part sub_image_{{loop.index}}" src="{{ image_path }}">
         {% endfor %}
     </div>
 
