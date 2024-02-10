@@ -9,11 +9,15 @@
     <style>
         body {
             background-color: rgba(66, 59, 59, 0.929);
+            justify-content: center;
+            align-items: center;
         }
 
         .flag-container {
             max-width: 400px;
             margin: 0 auto;
+            margin-top: 20px;
+            margin-bottom: 20px;
             display: grid;
             grid-template-columns: repeat({{difficulty_columns}}, 2fr);
             grid-template-rows: repeat({{difficulty_rows}}, 1fr);
@@ -25,12 +29,58 @@
             height: 100%;
             object-fit: cover;
         }
+
+        .user-info {
+            text-align: center;
+            max-width: 500px; 
+            margin: 0 auto;
+        }
+
+        .user-info p {
+            font-family: monospace;
+            font-size: 18px;
+            color: black;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        .fade-in {
+        animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-evenly;
+            margin-top: 10px; 
+        }
+        .options a {
+            padding: 5px;
+            background-color: #32383e; 
+            color: white; 
+            font-weight: bold;
+            text-decoration: none;
+            border: 1px solid #0a0101;
+            text-transform: uppercase;
+            border-radius: 5px;
+        }
     </style>
     <script src="{{ url_for('static', filename='script/change_image.js') }}"></script>
 </head>
 
 <body>
-    <h1>{{country}}</h1>
+    
     <div class="flag-container">
         {% for part in parts %}
             {% set image_path = url_for('static', filename = '/background/part_background.png') %}
@@ -38,16 +88,23 @@
         {% endfor %}
     </div>
 
+    <div class="user-info">
+        <p id="user-info"></p>
+        <div class="options">
+
+        </div>
+    </div>
+
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-6 offset-md-3">
-                <label for="country-dropdown">Select a country</label>
+                <!-- <label for="country-dropdown">Select a country</label> -->
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="country-dropdown"><i class="fas fa-globe"></i></label>
                     </div>
                     <select class="custom-select" id="country-dropdown" name="selected-country"
-                        onchange="updateImageSource('{{country}}', '{{difficulty}}')">
+                        onchange="handlePostRequest('{{country}}', '{{difficulty}}')">
                         <option value="" selected disabled>Select a country</option>
                         {% for country in countries %}
                         <option value="{{ country }}">{{ country }}</option>
@@ -58,7 +115,7 @@
         </div>
     </div>
 
-    <table id="user-guesses" class="table table-dark" style="display: none; width: 50%; height: 50%; margin: auto;">
+    <table id="user-guesses" class="table table-dark" style="display: none; width: 40%; height: 50%; margin: auto; font-family: monospace;">
         <tbody>
         </tbody>
     </table>
