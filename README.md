@@ -1,3 +1,3 @@
 # Guess the Flag
 
-Replica of Flagle, made with Python, Flask, Jinja and JQuery.
+Replica of [Flagle](https://www.flagle.io/), made with Python, Flask, Jinja and JavaScript.
